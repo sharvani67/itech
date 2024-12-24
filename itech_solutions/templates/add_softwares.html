@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Software Management</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <form id="softwareForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!-- Add Software Form -->
+        <section class="d-flex justify-content-center align-items-center mt-5">
+            <div class="card shadow-lg p-4 mb-5 w-50 text-center">
+                <h4 class="mb-4">Add New Software</h4>
+                <input type="text" id="addName" placeholder="Software Name" class="form-control mb-3" required />
+                <textarea id="addDescription" placeholder="Description" class="form-control mb-3" required></textarea>
+                <input type="file" id="addFile" class="form-control mb-3" required />
+
+                <button id="addSoftware" type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-plus"></i> Add Software
+                </button>
+            </div>
+        </section>
+    </form>
+    
+    <!-- Display Added Software -->
+    <section class="container">
+        <div class="row" id="softwareList">
+            <!-- Cards will be dynamically added here -->
+        </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom Script -->
+    <script>
+        // Handle form submission
+        const softwareForm = document.getElementById('softwareForm');
+        const softwareList = document.getElementById('softwareList');
+
+        softwareForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form from refreshing the page
+
+            // Get form values
+            const name = document.getElementById('addName').value;
+            const description = document.getElementById('addDescription').value;
+            const file = document.getElementById('addFile').files[0];
+
+            // Validate inputs
+            if (!name || !description || !file) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            // Create a new card element
+            const newCard = document.createElement('div');
+            newCard.classList.add('col-md-4', 'mb-4');
+
+            newCard.innerHTML = `
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">${name}</h5>
+                        <p class="card-text">${description}</p>
+                        <div class="d-flex justify-content-around mt-3">
+                            <a href="#" class="btn btn-success">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                            <button class="btn btn-warning">
+                                <i class="fas fa-edit"></i> Update
+                            </button>
+                            <button class="btn btn-danger delete-btn">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Append the new card to the list
+            softwareList.appendChild(newCard);
+
+            // Clear form fields
+            document.getElementById('addName').value = '';
+            document.getElementById('addDescription').value = '';
+            document.getElementById('addFile').value = '';
+
+            // Add delete functionality to the card
+            const deleteButton = newCard.querySelector('.delete-btn');
+            deleteButton.addEventListener('click', () => {
+                softwareList.removeChild(newCard);
+            });
+        });
+    </script>
+</body>
+</html>
