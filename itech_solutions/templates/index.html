@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - ITech Solutions{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="hero" style="background-color: #343a40; color: white; padding: 100px 20px; text-align: center;">
+    <div class="hero-content">
+        <h1 class="display-4" style="font-size: 3rem; font-weight: 700;">Welcome to ITech Solutions</h1>
+        <p class="lead" style="font-size: 1.5rem; margin-top: 10px;">Your one-stop solution for all software needs</p>
+    </div>
+</div>
+
+<!-- Software Cards Section -->
+<div class="container my-5">
+    <h2 class="text-center mb-4">Our Products</h2>
+    <div class="row">
+        {% for software in softwares %}
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ software.name }}</h5>
+                    <p class="card-text">{{ software.description }}</p>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="{{ software.file.url }}" class="btn btn-primary btn-sm" download>Download</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

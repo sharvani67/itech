@@ -1,47 +1,61 @@
-
-# VIEWS
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from .models import Software
 
-# View for rendering the template
-def software_list(request):
+def home(request):
     softwares = Software.objects.all()
-    return render(request, 'add_softwares.html', {'softwares': softwares})
+    return render(request, 'index.html', {'softwares': softwares})
 
-# View to handle adding software
-def add_software(request):
+
+def upload_software(request):
     if request.method == 'POST':
         name = request.POST['name']
         description = request.POST['description']
-        file = request.FILES.get('file')  # Use .get() to avoid KeyError
+        uploaded_file = request.FILES['file']
 
-        if not file:  # Check if file is provided
-            return JsonResponse({'error': 'No file uploaded'}, status=400)
+        if not uploaded_file.name.endswith('.exe'):
+            return render(request, 'software_form.html', {
+                'error': 'Only .exe files are allowed.',
+            })
 
-        Software.objects.create(
-            name=name,
-            description=description,
-            file=file
-        )
-        return redirect('software_list')
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+        # Save data to the database
+        software = Software(name=name, description=description, file=uploaded_file)
+        software.save()
+
+        return redirect('software_list')  # Redirect to the list page after upload
+
+    return render(request, 'software_form.html')
 
 
-# View to handle deleting software
+
+def software_list(request):
+    softwares = Software.objects.all()
+    return render(request, 'list.html', {'softwares': softwares})
+
+
+
+from django.shortcuts import get_object_or_404
+def update_software(request, id):
+    software = get_object_or_404(Software, id=id)  # Get the software object by id
+
+    if request.method == 'POST':
+        software.name = request.POST.get('name')
+        software.description = request.POST.get('description')
+
+        # Handle file upload
+        uploaded_file = request.FILES.get('file')
+        if uploaded_file:
+            software.file = uploaded_file  # Replace with the new file
+
+        software.save()  # Save the updated software instance
+        return redirect('software_list')  # Redirect to the software list page after updating
+
+    return render(request, 'update_form.html', {'software': software})
+
+
+
 def delete_software(request, id):
     software = get_object_or_404(Software, id=id)
     software.delete()
-    return redirect('software_list')
+    return redirect('software_list')  # Redirect to the software list
 
-# View to handle updating software
-def update_software(request, id):
-    software = get_object_or_404(Software, id=id)
-    if request.method == 'POST':
-        software.name = request.POST['name']
-        software.description = request.POST['description']
-        if 'file' in request.FILES:
-            software.file = request.FILES['file']
-        software.save()
-        return redirect('software_list')
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+
