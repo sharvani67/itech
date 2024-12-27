@@ -58,4 +58,43 @@ def delete_software(request, id):
     software.delete()
     return redirect('software_list')  # Redirect to the software list
 
+from django.shortcuts import render
+from .models import*
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import*
+
+class getsoftware(APIView):
+    def get(self,request):
+        software= Software.objects.all()
+        serializers = SoftwareSerializer(software,many=True)
+        return Response(serializers.data)
+
+# class getstudentById(APIView):
+#     def get(self,request,id):
+#         Student= Students.objects.get(id = id)
+#         serializers = StudentSerilizers(Student)
+#         return Response(serializers.data)
+
+class createsoftware(APIView):
+    def post(self,request):
+        serializer = SoftwareSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        
+class updatesoftware(APIView):
+    def put(self,request,id):
+        software = Software.objects.get(id=id)
+        serializer = SoftwareSerializer(software,data = request.data,partial=True)
+        if serializer.is_valid():
+
+            serializer.save()
+            return Response({"message":"updated suceess"})
+
+class deletesoftware(APIView):
+    def delete(self,request,id):
+        software =Software.objects.get(id = id)
+        software.delete()
+        return Response({"message":"deleted successfully"})
 
