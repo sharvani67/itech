@@ -5,25 +5,25 @@
 {% block content %}
 
 <!-- Hero Section -->
-<div class="hero" style="background-color: #343a40; color: white; padding: 100px 20px; text-align: center;">
+<div class="hero" style="background:linear-gradient(to right, #004080, #3366cc); color: white; padding: 70px 20px; text-align: center; margin: 0;width:100%;">
     <div class="hero-content">
-        <h1 class="display-4" style="font-size: 3rem; font-weight: 700;">Welcome to ITech Solutions</h1>
-        <p class="lead" style="font-size: 1.5rem; margin-top: 10px;">Your one-stop solution for all software needs</p>
+        <h1 class="display-4" style="font-size: 3rem; font-weight: 700; margin-bottom: 10px; animation: fadeIn 1.5s;">Welcome to ITech Solutions</h1>
+        <p class="lead" style="font-size: 1.5rem; margin-top: 10px; animation: fadeIn 2s;">Your one-stop solution for all software needs</p>
     </div>
 </div>
 
 <!-- Software Cards Section -->
 <div class="container my-5">
-    <h2 class="text-center mb-4">Our Products</h2>
+    <h2 class="text-center mb-4" style="font-weight: 600;">Our Products</h2>
     <div class="row">
         {% for software in softwares %}
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100 shadow-sm" style="border: none; transition: transform 0.3s, box-shadow 0.3s;background-color: #f8f9fa;padding:10px">
                 <div class="card-body">
-                    <h5 class="card-title">{{ software.name }}</h5>
-                    <p class="card-text">{{ software.description }}</p>
+                    <h5 class="card-title" style="font-weight: 600;text-align: center;">{{ software.name }}</h5>
+                    <p class="card-text" style="text-align: center;">{{ software.description }}</p>
                 </div>
-                <div class="card-footer text-center">
+                <div class=" text-center" style="background-color: #f8f9fa;">
                     <a href="{{ software.file.url }}" class="btn btn-primary btn-sm" download>Download</a>
                 </div>
             </div>
@@ -32,4 +32,24 @@
     </div>
 </div>
 
+
+<style>
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
 {% endblock %}
+
