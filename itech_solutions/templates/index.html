@@ -24,14 +24,67 @@
                     <p class="card-text" style="text-align: center;">{{ software.description }}</p>
                 </div>
                 <div class=" text-center" style="background-color: #f8f9fa;">
-                    <a href="{{ software.file.url }}" class="btn btn-primary btn-sm" download>Download</a>
+                    <button class="btn btn-primary btn-sm openModal" data-bs-toggle="modal" data-bs-target="#downloadModal" 
+                            data-url="{{ software.file.url }}" data-name="{{ software.name }}">Download</button>
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
 </div>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
+<!-- Download Modal -->
+<div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold" id="downloadModalLabel">Submit Your Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="downloadForm">
+                    <!-- Name Field -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold">Your Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-person-fill"></i></span>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                        </div>
+                    </div>
+                    <!-- Mobile Number Field -->
+                    <div class="mb-3">
+                        <label for="mobile" class="form-label fw-semibold">Mobile Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-phone-fill"></i></span>
+                            <input type="tel" id="mobile" name="mobile" class="form-control" placeholder="Enter your mobile number" required pattern="[0-9]{10}">
+                        </div>
+                    </div>
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope-fill"></i></span>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                        </div>
+                    </div>
+                    <!-- City Field -->
+                    <div class="mb-3">
+                        <label for="city" class="form-label fw-semibold">City</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-geo-alt-fill"></i></span>
+                            <input type="text" id="city" name="city" class="form-control" placeholder="Enter your city" required>
+                        </div>
+                    </div>
+                    <input type="hidden" id="downloadUrl">
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill" id="submitDownload">Submit & Download</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <style>
     .card:hover {
@@ -51,5 +104,40 @@
     }
 </style>
 
-{% endblock %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let downloadUrl = "";
 
+        document.querySelectorAll('.openModal').forEach(button => {
+            button.addEventListener('click', function () {
+                downloadUrl = this.getAttribute('data-url');
+                document.getElementById('downloadUrl').value = downloadUrl;
+            });
+        });
+
+        document.getElementById('submitDownload').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('mobile').value;
+            const city = document.getElementById('city').value;
+
+            if (name && email && phone && city) {
+                alert('Form submitted successfully!');
+
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = "";
+                link.click();
+
+                const modal = bootstrap.Modal.getInstance(document.getElementById('downloadModal'));
+                modal.hide();
+            } else {
+                alert('Please fill in all fields!');
+            }
+        });
+    });
+</script>
+
+{% endblock %}
