@@ -98,8 +98,44 @@ class deletesoftware(APIView):
         software.delete()
         return Response({"message":"deleted successfully"})
 
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 def contact(request):
-    return render(request,'contact.html')
+    if request.method == "POST":
+        # Get data from form
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        mobile = request.POST.get('mobile')
+        message = request.POST.get('message')
+
+        # Email Subject and Body
+        subject = f"New Contact Form Submission from {name}"
+        body = f"""
+        Name: {name}
+        Email: {email}
+        Mobile: {mobile}
+
+        Message:
+        {message}
+        """
+
+        try:
+            # Send email to admin
+            send_mail(
+                subject,
+                body,
+                email,  # From email (user's email)
+                ['rajeshyanamadala2000@gmail.com'],  # Replace with admin's email
+                fail_silently=False,
+            )
+            messages.success(request, "Your message has been sent successfully!")
+            return redirect('contact')  # Redirect to the same page
+        except Exception as e:
+            messages.error(request, "Failed to send your message. Please try again later.")
+    
+    return render(request, 'contact.html')
 
  # Import Profile if you're using it
 
