@@ -106,38 +106,77 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        let downloadUrl = "";
+    let downloadUrl = "";
+    let softwareName = "";
 
-        document.querySelectorAll('.openModal').forEach(button => {
-            button.addEventListener('click', function () {
-                downloadUrl = this.getAttribute('data-url');
-                document.getElementById('downloadUrl').value = downloadUrl;
-            });
-        });
-
-        document.getElementById('submitDownload').addEventListener('click', function (e) {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            const phone = document.getElementById('mobile').value;
-            const city = document.getElementById('city').value;
-
-            if (name && email && phone && city) {
-                alert('Form submitted successfully!');
-
-                const link = document.createElement('a');
-                link.href = downloadUrl;
-                link.download = "";
-                link.click();
-
-                const modal = bootstrap.Modal.getInstance(document.getElementById('downloadModal'));
-                modal.hide();
-            } else {
-                alert('Please fill in all fields!');
-            }
+    // Open Modal and Capture Data
+    document.querySelectorAll('.openModal').forEach(button => {
+        button.addEventListener('click', function () {
+            downloadUrl = this.getAttribute('data-url');
+            softwareName = this.getAttribute('data-name'); // Get software name
+            document.getElementById('downloadUrl').value = downloadUrl;
         });
     });
+
+    // Handle Submit and AJAX Request
+    document.getElementById('submitDownload').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('mobile').value;
+        const city = document.getElementById('city').value;
+
+        if (name && email && phone && city) {
+            // AJAX Request to send email
+            fetch('', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCSRFToken(),
+                },
+                body: new URLSearchParams({
+                    name: name,
+                    email: email,
+                    mobile: phone,
+                    city: city,
+                    software_name: softwareName,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Form submitted successfully!');
+
+                    // Trigger File Download
+                    const link = document.createElement('a');
+                    link.href = downloadUrl;
+                    link.download = "";
+                    link.click();
+
+                    // Close Modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('downloadModal'));
+                    modal.hide();
+                } else {
+                    alert('Failed to submit form. Please try again later!');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+            });
+        } else {
+            alert('Please fill in all fields!');
+        }
+    });
+
+    // CSRF Token Helper Function
+    function getCSRFToken() {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+        return csrfToken ? csrfToken.value : '';
+    }
+});
+
 </script>
 
 {% endblock %}

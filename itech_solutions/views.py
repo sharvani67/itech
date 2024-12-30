@@ -1,9 +1,42 @@
 from django.shortcuts import render, redirect
 from .models import Software
 
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.shortcuts import render
+from .models import Software  # Assuming you have a Software model
+
 def home(request):
+    if request.method == "POST":
+        # Get form data from AJAX request
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        mobile = request.POST.get('mobile')
+        city = request.POST.get('city')
+        software_name = request.POST.get('software_name')
+
+        # Email content
+        subject = f"Download Request for {software_name}"
+        message = f"""
+        Name: {name}
+        Email: {email}
+        Mobile: {mobile}
+        City: {city}
+
+        Requested Software: {software_name}
+        """
+        admin_email = 'rajeshyanamadala2000@gmail.com'  # Replace with admin's email
+
+        try:
+            # Send email to admin
+            send_mail(subject, message, email, [admin_email])
+            return JsonResponse({'success': True, 'message': "Email sent successfully!"})
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': "Failed to send email!"})
+
     softwares = Software.objects.all()
     return render(request, 'index.html', {'softwares': softwares})
+
 
 
 def upload_software(request):
