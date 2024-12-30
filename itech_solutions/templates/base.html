@@ -38,7 +38,7 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/home/' %}active{% endif %}" href="{% url 'home' %}">Home</a>
                     </li>
-                    {% if request.session.user_role == "Admin" %}
+                    {% if request.session.role == 'Admin' %}
                     <li class="nav-item">
                         <a class="nav-link {% if request.path == '/upload-software/' %}active{% endif %}" href="{% url 'upload_software' %}">Upload</a>
                     </li>
