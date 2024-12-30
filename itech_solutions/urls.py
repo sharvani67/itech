@@ -10,6 +10,7 @@ from . import views
 urlpatterns = [
     # Web-based routes
     path('home/', views.home, name='home'),  # Home page
+    path('contact/', views.contact, name='contact'),
     path('upload-software/', views.upload_software, name='upload_software'),
     path('software-list/', views.software_list, name='software_list'),
     path('update/<int:id>/', views.update_software, name='update_software'),

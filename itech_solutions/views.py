@@ -98,3 +98,5 @@ class deletesoftware(APIView):
         software.delete()
         return Response({"message":"deleted successfully"})
 
+def contact(request):
+    return render(request,'contact.html')
