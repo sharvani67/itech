@@ -1,10 +1,32 @@
 from django.shortcuts import render, redirect
 from .models import Software
-
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render
-from .models import Software  # Assuming you have a Software model
+from django.template.loader import render_to_string
+from django.conf import settings
+from .models import Software
+
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.conf import settings
+
+def send_confirmation_email(user_email, user_name, software_name):
+    subject = 'Download Confirmation - ITech Solutions'
+    message = render_to_string('emails/download_confirmation_email.html', {
+        'user_name': user_name,
+        'software_name': software_name,
+          # Include the download URL
+    })
+    
+    send_mail(
+        subject,
+        message,  # Plain text message (optional)
+        settings.EMAIL_HOST_USER,  # The email address that sends the confirmation email
+        [user_email],
+        html_message=message  # This sends the HTML version of the email
+    )
+
 
 def home(request):
     if request.method == "POST":
@@ -15,9 +37,9 @@ def home(request):
         city = request.POST.get('city')
         software_name = request.POST.get('software_name')
 
-        # Email content
-        subject = f"Download Request for {software_name}"
-        message = f"""
+        # Email content to admin
+        subject_admin = f"Download Request for {software_name}"
+        message_admin = f"""
         Name: {name}
         Email: {email}
         Mobile: {mobile}
@@ -29,7 +51,11 @@ def home(request):
 
         try:
             # Send email to admin
-            send_mail(subject, message, email, [admin_email])
+            send_mail(subject_admin, message_admin, email, [admin_email])
+
+            # Send email to user (confirmation email)
+            send_confirmation_email(email, name, software_name)
+
             return JsonResponse({'success': True, 'message': "Email sent successfully!"})
         except Exception as e:
             return JsonResponse({'success': False, 'message': "Failed to send email!"})

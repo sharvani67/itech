@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'itech_solutions',
     'rest_framework',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -49,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'tech.urls'
@@ -131,10 +134,22 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/login/'  # This should match the login view in your app's `urls.py`.
 
 
+# Email settings for sending emails through Gmail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS=True
-EMAIL_HOST='smtp.gmail.com'
-EMAIL_HOST_USER='manitejavadnala@gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'manitejavadnala@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'fppo lbmw edaf macr'  # Your Gmail app password or regular password
+EMAIL_PORT = 587
 
-EMAIL_HOST_PASSWORD='fppo lbmw edaf macr'
-EMAIL_PORT=587
+# Default email for sending from (admin email)
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Admin email for receiving form data
+ADMIN_EMAIL = 'rajeshyanamadala2000@gmail.com'  # Admin's email address
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React App URL
+]
