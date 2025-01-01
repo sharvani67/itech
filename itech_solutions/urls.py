@@ -17,23 +17,12 @@ urlpatterns = [
     path('software-list/', login_required(views.software_list), name='software_list'),
     path('update/<int:id>/', login_required(views.update_software), name='update_software'),
     path('delete/<int:id>/', login_required(views.delete_software), name='delete_software'),
+    path('', lambda request: redirect('login/')), 
+    path('register/', views.register_view, name='register'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 
-
-        path('softwares',views.getsoftware.as_view(),name='softwares-all'),
-        # path('softwares/id/<int:id>',getstudentById.as_view(),name='softwares-by-id'),
-        path('softwares/create',views.createsoftware.as_view(),name='softwares-create'),
-        path('softwares/update/id/<int:id>',views.updatesoftware.as_view(),name='softwares-update'),
-        path('softwares/update/<int:id>',views.updatesoftware.as_view(),name='softwares-update'),
-        path('softwares/delete/id/<int:id>',views.deletesoftware.as_view(),name='softwares-delete'),
-
-
-         path('', lambda request: redirect('login/')), 
-         path('register/', views.register_view, name='register'),
-            path('login/', views.login_view, name='login'),
-            path('logout/', views.logout_view, name='logout'),
-
-    # API routes
-    # path('', include(router.urls)), 
+    
 ]
 
 # Media URL Configuration

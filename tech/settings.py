@@ -138,8 +138,8 @@ LOGIN_URL = '/login/'  # This should match the login view in your app's `urls.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'manitejavadnala@gmail.com'  # Your Gmail address
-EMAIL_HOST_PASSWORD = 'fppo lbmw edaf macr'  # Your Gmail app password or regular password
+EMAIL_HOST_USER = 'solutionsitech845@gmail.com'  # Your Gmail address
+EMAIL_HOST_PASSWORD = 'yioq wuqy zofp jduj'  # Your Gmail app password or regular password
 EMAIL_PORT = 587
 
 # Default email for sending from (admin email)
