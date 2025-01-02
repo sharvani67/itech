@@ -128,12 +128,11 @@
         const city = document.getElementById('city').value;
 
         if (name && email && phone && city) {
-            // AJAX Request to send email
             fetch('', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCSRFToken(),
+                    'X-CSRFToken': getCookie('csrftoken'), // Fixed CSRF token retrieval
                 },
                 body: new URLSearchParams({
                     name: name,
@@ -170,12 +169,24 @@
         }
     });
 
-    // CSRF Token Helper Function
-    function getCSRFToken() {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
-        return csrfToken ? csrfToken.value : '';
+    // Function to get CSRF Token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Check if cookie name matches the required token
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 });
+
 
 </script>
 

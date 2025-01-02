@@ -47,7 +47,7 @@ def home(request):
 
         Requested Software: {software_name}
         """
-        admin_email = 'rajeshyanamadala2000@gmail.com'  # Replace with admin's email
+        admin_email = 'itechsolutionsknr@gmail.com'  # Replace with admin's email
 
         try:
             # Send email to admin
@@ -147,7 +147,7 @@ def contact(request):
                 subject,
                 body,
                 email,  # From email (user's email)
-                ['rajeshyanamadala2000@gmail.com'],  # Replace with admin's email
+                ['itechsolutionsknr@gmail.com'],  # Replace with admin's email
                 fail_silently=False,
             )
             messages.success(request, "Your message has been sent successfully!")
@@ -222,7 +222,7 @@ def login_view(request):
     return render(request, 'authentication/login.html')
 
 
-# @login_required
+@login_required
 def logout_view(request):
     # Clear all session data
     request.session.flush()

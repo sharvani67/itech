@@ -146,7 +146,7 @@ EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Admin email for receiving form data
-ADMIN_EMAIL = 'rajeshyanamadala2000@gmail.com'  # Admin's email address
+ADMIN_EMAIL = 'itechsolutionsknr@gmail.com'  # Admin's email address
 
 
 
