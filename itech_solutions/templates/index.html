@@ -42,7 +42,9 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4">
-                <form id="downloadForm">
+                <form id="downloadForm" method="POST">
+                    <!-- CSRF Token -->
+                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
                     <!-- Name Field -->
                     <div class="mb-3">
                         <label for="name" class="form-label fw-semibold">Your Name</label>
@@ -105,20 +107,18 @@
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+   document.addEventListener('DOMContentLoaded', function () {
     let downloadUrl = "";
     let softwareName = "";
 
-    // Open Modal and Capture Data
     document.querySelectorAll('.openModal').forEach(button => {
         button.addEventListener('click', function () {
             downloadUrl = this.getAttribute('data-url');
-            softwareName = this.getAttribute('data-name'); // Get software name
+            softwareName = this.getAttribute('data-name');
             document.getElementById('downloadUrl').value = downloadUrl;
         });
     });
 
-    // Handle Submit and AJAX Request
     document.getElementById('submitDownload').addEventListener('click', function (e) {
         e.preventDefault();
 
@@ -126,13 +126,14 @@
         const email = document.getElementById('email').value;
         const phone = document.getElementById('mobile').value;
         const city = document.getElementById('city').value;
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
         if (name && email && phone && city) {
             fetch('', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCookie('csrftoken'), // Fixed CSRF token retrieval
+                    'X-CSRFToken': csrfToken,
                 },
                 body: new URLSearchParams({
                     name: name,
@@ -147,45 +148,31 @@
                 if (data.success) {
                     alert('Form submitted successfully!');
 
-                    // Trigger File Download
-                    const link = document.createElement('a');
-                    link.href = downloadUrl;
-                    link.download = "";
-                    link.click();
+                    setTimeout(() => {
+                        const link = document.createElement('a');
+                        link.href = downloadUrl;
+                        link.download = "";
+                        link.click();
+                    }, 1000); // Delay ensures form processing completes
 
                     // Close Modal
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('downloadModal'));
-                    modal.hide();
+                    const modalElement = document.getElementById('downloadModal');
+                    const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                    modalInstance.hide();
                 } else {
                     alert('Failed to submit form. Please try again later!');
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred. Please try again later.');
+                alert('An unexpected error occurred. Please try again later.');
             });
         } else {
             alert('Please fill in all fields!');
         }
     });
-
-    // Function to get CSRF Token from cookies
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                // Check if cookie name matches the required token
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
 });
+
 
 
 </script>

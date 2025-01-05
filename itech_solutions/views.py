@@ -2,14 +2,11 @@ from django.shortcuts import render, redirect
 from .models import Software
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.conf import settings
-from .models import Software
+from django.middleware.csrf import get_token
+from django.contrib import messages
 
-from django.core.mail import send_mail
-from django.template.loader import render_to_string
-from django.conf import settings
 
 def send_confirmation_email(user_email, user_name, software_name):
     subject = 'Download Confirmation - ITech Solutions'
@@ -29,6 +26,7 @@ def send_confirmation_email(user_email, user_name, software_name):
 
 
 def home(request):
+   
     if request.method == "POST":
         # Get form data from AJAX request
         name = request.POST.get('name')
@@ -61,6 +59,7 @@ def home(request):
             return JsonResponse({'success': False, 'message': "Failed to send email!"})
 
     softwares = Software.objects.all()
+    
     return render(request, 'index.html', {'softwares': softwares})
 
 
@@ -118,9 +117,8 @@ def delete_software(request, id):
     return redirect('software_list')  # Redirect to the software list
 
 
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect
-from django.contrib import messages
+
+
 
 def contact(request):
     if request.method == "POST":
@@ -160,10 +158,10 @@ def contact(request):
  # Import Profile if you're using it
 
 
-from django.shortcuts import render, redirect
+
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
+
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile  # Import the UserProfile model
 
